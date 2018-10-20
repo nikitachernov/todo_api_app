@@ -1,0 +1,28 @@
+{
+  "id": "file:/errors.json#",
+  "type": "object",
+  "required": ["errors"],
+  "properties": {
+    "errors": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["source", "detail"],
+        "properties": {
+          "source": {
+            "type": "object",
+            "required": ["pointer"],
+            "properties": {
+              "pointer": {
+                "type": "string"
+              }
+            }
+          },
+          "detail": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

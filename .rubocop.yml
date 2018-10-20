@@ -1,5 +1,9 @@
+inherit_from:
+  - .rubocop_airbnb.yml
 AllCops:
   Exclude:
     - "bin/**/*"
-inherit_from:
-  - .rubocop_airbnb.yml
+    - "db/schema.rb"
+Style/StringLiterals:
+  EnforcedStyle: double_quotes
+  Enabled: true

@@ -1,0 +1,13 @@
+{
+  "id": "file:/tasks.json#",
+  "type": "object",
+  "required": ["data"],
+  "properties": {
+    "data": {
+      "type": "array",
+      "items": {
+        "$ref": "file:/task_body.json#"
+      }
+    }
+  }
+}
