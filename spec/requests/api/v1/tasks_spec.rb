@@ -137,14 +137,30 @@ RSpec.describe Task, type: :request do
   end
 
   describe "DELETE #destroy" do
-    before { create(:task) }
+    let(:delete_task) do
+      lambda do |id|
+        delete "/api/v1/tasks/#{task.to_param}"
+      end
+    end
 
     let(:task) { Task.first }
 
+    before { create(:task) }
+
     it "destroys the requested task" do
-      expect do
-        delete "/api/v1/tasks/#{task.to_param}"
-      end.to change(Task, :count).by(-1)
+      expect { delete_task.call(task.to_param) }.to change(Task, :count).by(-1)
+    end
+
+    context "when after destroy" do
+      before { delete_task.call(task.to_param) }
+
+      it "returns a no content response" do
+        expect(response).to have_http_status(:no_content)
+      end
+
+      it "returns empty response" do
+        expect(response.body).to be_blank
+      end
     end
   end
 end

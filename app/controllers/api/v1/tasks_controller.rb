@@ -31,6 +31,7 @@ module Api
         task = find_task
 
         task.destroy
+        render status: :no_content
       end
 
       private

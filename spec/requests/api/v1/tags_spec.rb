@@ -133,14 +133,30 @@ RSpec.describe Tag, type: :request do
   end
 
   describe "DELETE #destroy" do
-    before { create(:tag) }
+    let(:delete_tag) do
+      lambda do |id|
+        delete "/api/v1/tags/#{tag.to_param}"
+      end
+    end
 
     let(:tag) { Tag.first }
 
+    before { create(:tag) }
+
     it "destroys the requested tag" do
-      expect do
-        delete "/api/v1/tags/#{tag.to_param}"
-      end.to change(Tag, :count).by(-1)
+      expect { delete_tag.call(tag.to_param) }.to change(Tag, :count).by(-1)
+    end
+
+    context "when after destroy" do
+      before { delete_tag.call(tag.to_param) }
+
+      it "returns a no content response" do
+        expect(response).to have_http_status(:no_content)
+      end
+
+      it "returns empty response" do
+        expect(response.body).to be_blank
+      end
     end
   end
 end

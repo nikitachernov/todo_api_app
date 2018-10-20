@@ -31,6 +31,7 @@ module Api
         tag = find_tag
 
         tag.destroy
+        render status: :no_content
       end
 
       private
