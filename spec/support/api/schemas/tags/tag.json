@@ -1,0 +1,10 @@
+{
+  "id": "file:/tag.json#",
+  "type": "object",
+  "required": ["data"],
+  "properties": {
+    "data": {
+      "$ref": "file:/task_body.json#"
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "id": "file:/tags.json#",
+  "type": "object",
+  "required": ["data"],
+  "properties": {
+    "data": {
+      "type": "array",
+      "items": {
+        "$ref": "file:/tag_body.json#"
+      }
+    }
+  }
+}

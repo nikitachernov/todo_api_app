@@ -4,3 +4,4 @@
 # (or created alongside the database with db:setup).
 
 Task.create!(title: "Wash laundry")
+Tag.create!(title: "Today")

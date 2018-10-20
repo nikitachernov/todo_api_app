@@ -1,0 +1,22 @@
+{
+  "id": "file:/tag_body.json#",
+  "type": "object",
+  "required": ["id", "type", "attributes"],
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string"
+    },
+    "attributes": {
+      "type": "object",
+      "required": ["title"],
+      "properties": {
+        "title": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}
