@@ -78,7 +78,7 @@ RSpec.describe Task, type: :request do
           expect(response.body).to have_json_size(1).at_path("errors")
         end
 
-        it 'returns errors in correct schema' do
+        it "returns errors in correct schema" do
           create_task.call(invalid_attributes)
 
           expect(response).to match_response_schema("errors")
