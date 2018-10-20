@@ -64,23 +64,17 @@ RSpec.describe Task, type: :request do
       end
 
       context "when after create" do
-        before { create_task.call(valid_attributes) }
+        before { create_task.call(invalid_attributes) }
 
         it "returns an unprocessable entity response" do
-          create_task.call(invalid_attributes)
-
           expect(response).to have_http_status(:unprocessable_entity)
         end
 
         it "returns 1 error" do
-          create_task.call(invalid_attributes)
-
           expect(response.body).to have_json_size(1).at_path("errors")
         end
 
         it "returns errors in correct schema" do
-          create_task.call(invalid_attributes)
-
           expect(response).to match_response_schema("errors")
         end
       end

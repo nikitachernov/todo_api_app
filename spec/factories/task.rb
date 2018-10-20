@@ -1,5 +1,5 @@
 FactoryBot.define do
   factory :task do
-    title { "Wash laundry" }
+    title { |n| "Task #{n}" }
   end
 end
