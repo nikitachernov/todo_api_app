@@ -67,11 +67,39 @@ RSpec.describe Task do
         expect(task.title).to eq(new_title)
       end
 
-      it "has 3 tags" do
-        task_form.save
-        task.reload
+      context "when with new tags" do
+        it "has 3 tags" do
+          task_form.save
+          task.reload
 
-        expect(task.tags.map(&:title)).to eq(tag_titles)
+          expect(task.tags.map(&:title)).to eq(tag_titles)
+        end
+      end
+
+      context "when without new tags" do
+        let(:params) { { title: title } }
+
+        it "has 5 tags" do
+          task_form.save
+          task.reload
+
+          expect(task.tags.count).to eq(5)
+        end
+
+        it "creates 0 tags" do
+          expect { task_form.save }.not_to change(Tag, :count)
+        end
+      end
+
+      context "when without tags" do
+        let(:params) { { title: title, tags: [] } }
+
+        it "has 0 tags" do
+          task_form.save
+          task.reload
+
+          expect(task.tags.count).to eq(0)
+        end
       end
     end
 

@@ -7,10 +7,20 @@ class TaskForm < Patterns::Form
   private
 
   def tag_ids
-    []
-    tag_titles = tags.select(&:present?)
+    tag_titles = []
+    existing_tags = []
 
-    existing_tags = Tag.where(title: tag_titles)
+    tags.each do |tag|
+      if tag.present?
+        if tag.is_a?(Tag)
+          existing_tags << tag
+        else
+          tag_titles << tag
+        end
+      end
+    end
+
+    existing_tags += Tag.where(title: tag_titles)
 
     new_tag_titles = tag_titles - existing_tags.map(&:title)
 
