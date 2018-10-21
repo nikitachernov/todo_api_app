@@ -100,9 +100,9 @@ RSpec.describe Task, type: :request do
 
     let(:task) { create(:task, tags_count: 5) }
 
-    before { update_task.call(task.to_param, new_attributes) }
-
     context "with valid params" do
+      before { update_task.call(task.to_param, new_attributes) }
+
       let(:new_attributes) { { title: task.title.reverse, tags: [] } }
 
       it "updates the requested task" do
@@ -125,6 +125,8 @@ RSpec.describe Task, type: :request do
     end
 
     context "with invalid params" do
+      before { update_task.call(task.to_param, new_attributes) }
+
       let(:new_attributes) { { title: "" } }
 
       it "doesn't update a task" do
@@ -145,12 +147,26 @@ RSpec.describe Task, type: :request do
         expect(response).to match_response_schema("errors")
       end
     end
+
+    context "when not found" do
+      before { update_task.call("404", new_attributes) }
+
+      let(:new_attributes) { { } }
+
+      it "returns a not found response" do
+        expect(response).to have_http_status(:not_found)
+      end
+
+      it "returns empty response" do
+        expect(response.body).to be_blank
+      end
+    end
   end
 
   describe "DELETE #destroy" do
     let(:delete_task) do
       lambda do |id|
-        delete "/api/v1/tasks/#{task.to_param}"
+        delete "/api/v1/tasks/#{id}"
       end
     end
 
@@ -167,6 +183,18 @@ RSpec.describe Task, type: :request do
 
       it "returns a no content response" do
         expect(response).to have_http_status(:no_content)
+      end
+
+      it "returns empty response" do
+        expect(response.body).to be_blank
+      end
+    end
+
+    context "when not found" do
+      before { delete_task.call("404") }
+
+      it "returns a not found response" do
+        expect(response).to have_http_status(:not_found)
       end
 
       it "returns empty response" do

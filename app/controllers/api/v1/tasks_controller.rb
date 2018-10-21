@@ -14,22 +14,28 @@ module Api
       end
 
       def update
-        task = find_task
-
-        save_task(task)
+        find_task do |task|
+          save_task(task)
+        end
       end
 
       def destroy
-        task = find_task
-
-        task.destroy
-        render status: :no_content
+        find_task do |task|
+          task.destroy
+          render status: :no_content
+        end
       end
 
       private
 
       def find_task
-        Task.find(params[:id])
+        tag = Task.find_by_id(params[:id])
+
+        if tag
+          yield tag
+        else
+          render_not_found
+        end
       end
 
       def save_task(task, status: :ok)

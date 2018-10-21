@@ -3,6 +3,10 @@ class ApplicationController < ActionController::API
     ActiveModelSerializers::Adapter::JsonApi::Deserialization.parse(params)
   end
 
+  def render_not_found
+    render status: :not_found
+  end
+
   def render_errors(object)
     render(
       json: object,

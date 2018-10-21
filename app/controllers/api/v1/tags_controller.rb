@@ -14,22 +14,28 @@ module Api
       end
 
       def update
-        tag = find_tag
-
-        save_tag(tag)
+        find_tag do |tag|
+          save_tag(tag)
+        end
       end
 
       def destroy
-        tag = find_tag
-
-        tag.destroy
-        render status: :no_content
+        find_tag do |tag|
+          tag.destroy
+          render status: :no_content
+        end
       end
 
       private
 
       def find_tag
-        Tag.find(params[:id])
+        tag = Tag.find_by_id(params[:id])
+
+        if tag
+          yield tag
+        else
+          render_not_found
+        end
       end
 
       def save_tag(tag, status: :ok)
