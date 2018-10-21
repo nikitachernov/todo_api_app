@@ -2,29 +2,21 @@ module Api
   module V1
     class TasksController < ApplicationController
       def index
-        tasks = Task.all
+        tasks = TasksWithTagsQuery.call
 
         render json: tasks
       end
 
       def create
-        task = Task.new(task_params)
+        task = Task.new
 
-        if task.save
-          render json: task, status: :created
-        else
-          render_errors(task)
-        end
+        save_task(task, status: :created)
       end
 
       def update
         task = find_task
 
-        if task.update(task_params)
-          render json: task
-        else
-          render_errors(task)
-        end
+        save_task(task)
       end
 
       def destroy
@@ -40,9 +32,14 @@ module Api
         Task.find(params[:id])
       end
 
-      def task_params
-        unpermitted_params = ActiveModelSerializers::Adapter::JsonApi::Deserialization.parse(params)
-        ActionController::Parameters.new(unpermitted_params).permit(:title)
+      def save_task(task, status: :ok)
+        task_form = TaskForm.new(task, resource_params)
+
+        if task_form.save
+          render json: task, status: status
+        else
+          render_errors(task_form)
+        end
       end
     end
   end

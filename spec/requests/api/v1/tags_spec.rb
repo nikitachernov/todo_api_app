@@ -116,6 +116,9 @@ RSpec.describe Tag, type: :request do
       let(:new_attributes) { { title: "" } }
 
       it "doesn't update a tag" do
+        tag.reload
+
+        expect(tag.title).to be_present
       end
 
       it "returns an unprocessable entity response" do

@@ -1,12 +1,12 @@
 require "rails_helper"
 
 RSpec.describe Task, type: :request do
-  let(:valid_attributes) { { title: "Wash Laundry" } }
+  let(:valid_attributes) { { title: "Wash Laundry", tags: ["Home", "Urgent"] } }
   let(:invalid_attributes) { { title: "" } }
 
   describe "GET #index" do
     before do
-      create_list(:task, 3)
+      create_list(:task, 3, tags_count: 5)
       get "/api/v1/tasks"
     end
 
@@ -16,6 +16,10 @@ RSpec.describe Task, type: :request do
 
     it "returns 3 tasks" do
       expect(response.body).to have_json_size(3).at_path("data")
+    end
+
+    it "returns tags for tasks" do
+      expect(response.body).to have_json_size(5).at_path("data/0/relationships/tags/data")
     end
 
     it "returns tasks in correct schema" do
@@ -45,14 +49,14 @@ RSpec.describe Task, type: :request do
         before { create_task.call(valid_attributes) }
 
         it "returns a created response" do
-          create_task.call(valid_attributes)
-
           expect(response).to have_http_status(:created)
         end
 
-        it "returns a task" do
-          create_task.call(valid_attributes)
+        it "returns tags for tasks" do
+          expect(response.body).to have_json_size(2).at_path("data/relationships/tags/data")
+        end
 
+        it "returns a task" do
           expect(response).to match_response_schema("tasks/task")
         end
       end
@@ -94,12 +98,12 @@ RSpec.describe Task, type: :request do
       end
     end
 
-    let(:task) { create(:task) }
+    let(:task) { create(:task, tags_count: 5) }
 
     before { update_task.call(task.to_param, new_attributes) }
 
     context "with valid params" do
-      let(:new_attributes) { { title: task.title.reverse } }
+      let(:new_attributes) { { title: task.title.reverse, tags: [] } }
 
       it "updates the requested task" do
         task.reload
@@ -111,6 +115,10 @@ RSpec.describe Task, type: :request do
         expect(response).to have_http_status(:ok)
       end
 
+      it "returns no tags for tasks" do
+        expect(response.body).to have_json_size(0).at_path("data/relationships/tags/data")
+      end
+
       it "returns a task" do
         expect(response).to match_response_schema("tasks/task")
       end
@@ -120,6 +128,9 @@ RSpec.describe Task, type: :request do
       let(:new_attributes) { { title: "" } }
 
       it "doesn't update a task" do
+        task.reload
+
+        expect(task.title).to be_present
       end
 
       it "returns an unprocessable entity response" do

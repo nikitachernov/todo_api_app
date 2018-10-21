@@ -2,29 +2,21 @@ module Api
   module V1
     class TagsController < ApplicationController
       def index
-        tags = Tag.all
+        tags = TagsQuery.call
 
         render json: tags
       end
 
       def create
-        tag = Tag.new(tag_params)
+        tag = Tag.new
 
-        if tag.save
-          render json: tag, status: :created
-        else
-          render_errors(tag)
-        end
+        save_tag(tag, status: :created)
       end
 
       def update
         tag = find_tag
 
-        if tag.update(tag_params)
-          render json: tag
-        else
-          render_errors(tag)
-        end
+        save_tag(tag)
       end
 
       def destroy
@@ -40,9 +32,14 @@ module Api
         Tag.find(params[:id])
       end
 
-      def tag_params
-        unpermitted_params = ActiveModelSerializers::Adapter::JsonApi::Deserialization.parse(params)
-        ActionController::Parameters.new(unpermitted_params).permit(:title)
+      def save_tag(tag, status: :ok)
+        tag_form = TagForm.new(tag, resource_params)
+
+        if tag_form.save
+          render json: tag, status: status
+        else
+          render_errors(tag_form)
+        end
       end
     end
   end

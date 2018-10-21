@@ -17,6 +17,32 @@
           "type": "string"
         }
       }
+    },
+    "relationships": {
+      "type": "object",
+      "required": ["tags"],
+      "properties": {
+        "tags": {
+          "type": "object",
+          "required": ["data"],
+          "properties": {
+            "data": {
+              "type": "array",
+              "items": {
+                "required": ["id", "type"],
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "type": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   }
 }

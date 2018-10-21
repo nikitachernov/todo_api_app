@@ -3,5 +3,7 @@
 # The data can then be loaded with the rails db:seed command
 # (or created alongside the database with db:setup).
 
-Task.create!(title: "Wash laundry")
 Tag.create!(title: "Today")
+Tag.create!(title: "Urgent")
+Tag.create!(title: "Home")
+Task.create!(title: "Wash laundry", tag_ids: [1])

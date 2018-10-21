@@ -35,5 +35,8 @@ module TodoApiApp
     # Use JSON:API
     ActiveModel::Serializer.config.adapter = :json_api
     ActiveModelSerializers.config.key_transform = :underscore
+
+    config.autoload_paths << Rails.root.join("app/queries")
+    config.autoload_paths << Rails.root.join("app/forms")
   end
 end
