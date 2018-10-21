@@ -3,8 +3,6 @@ require "rails_helper"
 RSpec.describe Task do
   subject { task_form }
 
-  before { create(:tag, title: "Home") }
-
   let(:task_form) { TaskForm.new(task, params) }
   let(:tag_titles) { ["Home", "Urgent", "Chores"] }
 
@@ -21,13 +19,25 @@ RSpec.describe Task do
         expect { task_form.save }.to change(Task, :count).by(1)
       end
 
-      it "creates 2 tags" do
-        expect { task_form.save }.to change(Tag, :count).by(2)
-      end
-
       it "has 3 tags" do
         task_form.save
+        task.reload
+
         expect(task.tags.map(&:title)).to eq(tag_titles)
+      end
+
+      context "when new tags" do
+        it "creates 3 tags" do
+          expect { task_form.save }.to change(Tag, :count).by(3)
+        end
+      end
+
+      context "when existing tags" do
+        before { create(:tag, title: tag_titles.first) }
+
+        it "creates 2 tags" do
+          expect { task_form.save }.to change(Tag, :count).by(2)
+        end
       end
     end
 
@@ -35,10 +45,6 @@ RSpec.describe Task do
       let(:title) { "" }
 
       it { should be_invalid }
-
-      it "creates 0 tags" do
-        expect { task_form.save }.not_to change(Tag, :count)
-      end
     end
   end
 
@@ -59,10 +65,6 @@ RSpec.describe Task do
         task.reload
 
         expect(task.title).to eq(new_title)
-      end
-
-      it "creates 2 tags" do
-        expect { task_form.save }.to change(Tag, :count).by(2)
       end
 
       it "has 3 tags" do

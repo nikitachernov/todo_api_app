@@ -139,7 +139,7 @@ RSpec.describe Tag, type: :request do
     context "when not found" do
       before { update_tag.call("404", new_attributes) }
 
-      let(:new_attributes) { { } }
+      let(:new_attributes) { {} }
 
       it "returns a not found response" do
         expect(response).to have_http_status(:not_found)

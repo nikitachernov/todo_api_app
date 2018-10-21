@@ -7,6 +7,7 @@ class TaskForm < Patterns::Form
   private
 
   def tag_ids
+    []
     tag_titles = tags.select(&:present?)
 
     existing_tags = Tag.where(title: tag_titles)
