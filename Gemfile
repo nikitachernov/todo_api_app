@@ -44,6 +44,7 @@ group :test do
   gem "json_spec"
   gem "factory_bot_rails", "~> 4.0"
   gem "json_matchers"
+  gem "simplecov", require: false
 end
 
 group :development do
