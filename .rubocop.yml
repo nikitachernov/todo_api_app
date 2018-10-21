@@ -4,6 +4,7 @@ AllCops:
   Exclude:
     - "bin/**/*"
     - "db/schema.rb"
+    - "Guardfile"
 Style/StringLiterals:
   EnforcedStyle: double_quotes
   Enabled: true
