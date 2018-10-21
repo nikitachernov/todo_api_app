@@ -4,6 +4,4 @@
 # (or created alongside the database with db:setup).
 
 Tag.create!(title: "Today")
-Tag.create!(title: "Urgent")
-Tag.create!(title: "Home")
 Task.create!(title: "Wash laundry", tag_ids: [1])

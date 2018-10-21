@@ -15,11 +15,6 @@ class ActiveModelUniquenessValidator < ActiveRecord::Validations::UniquenessVali
 
     attribute = options[:attribute].to_sym if options[:attribute]
     record = options[:model].new(attribute => value)
-    base_attrs = {}
-    if options[:scope]
-      base_attrs[options[:scope]] = record.send(options[:scope])
-    end
-    record = options[:model].new(base_attrs)
 
     super
 

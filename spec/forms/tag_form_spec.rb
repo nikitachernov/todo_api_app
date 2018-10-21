@@ -50,6 +50,18 @@ RSpec.describe Tag do
 
         expect(tag.title).to eq(new_title)
       end
+
+      context "when duplicate" do
+        before { create(:tag, title: "Home") }
+
+        it { should be_invalid }
+      end
+
+      context "when saving with the same title" do
+        let(:new_title) { title }
+
+        it { should be_valid }
+      end
     end
 
     context "when invalid attributes" do
