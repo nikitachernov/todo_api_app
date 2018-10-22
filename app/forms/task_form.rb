@@ -6,21 +6,16 @@ class TaskForm < Patterns::Form
 
   private
 
+  def tags_changed?
+    resource.tags != tags
+  end
+
   def tag_ids
-    tag_titles = []
-    existing_tags = []
+    return resource.tag_ids unless tags_changed?
 
-    tags.each do |tag|
-      if tag.present?
-        if tag.is_a?(Tag)
-          existing_tags << tag
-        else
-          tag_titles << tag
-        end
-      end
-    end
+    tag_titles = tags.select(&:present?)
 
-    existing_tags += Tag.where(title: tag_titles)
+    existing_tags = Tag.where(title: tag_titles)
 
     new_tag_titles = tag_titles - existing_tags.map(&:title)
 
@@ -30,6 +25,8 @@ class TaskForm < Patterns::Form
   end
 
   def persist
-    resource.update_attributes(title: attributes[:title], tag_ids: tag_ids)
+    ActiveRecord::Base.transaction do
+      resource.update_attributes(title: attributes[:title], tag_ids: tag_ids)
+    end
   end
 end
